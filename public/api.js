@@ -7,8 +7,9 @@ const API = {
       console.log(err)
     }
     let json = await res.json();
-
+    console.log(json);
     json = json[json.length - 1];
+    console.log(json);
     if (json){
       let totalDuration = 0;
       json.exercises.forEach(exercise => totalDuration+= exercise.duration);

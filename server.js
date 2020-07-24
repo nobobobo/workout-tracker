@@ -1,9 +1,11 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const path = require("path");
+const mongojs = require("mongojs");
 
 const PORT = process.env.PORT || 3000; 
 const db = require("./models");
-const { Workout } = require('./models');
+
 const app = express();
 
 app.use(express.urlencoded({ extended: true }));
@@ -13,15 +15,29 @@ app.use(express.static("public"));
 
 mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout", { useNewUrlParser: true });
 
+app.get("/exercise", function (req, res) {
+    res.sendFile(path.join(__dirname, "public/exercise.html"));
+});
+
+app.get("/stats", function (req, res) {
+    res.sendFile(path.join(__dirname, "public/stats.html"));
+});
+
 app.get('/api/workouts', (req, res)=>{
     db.Workout.find({})
         .then(data=>res.json(data))
         .catch(err=> res.json(err));
 })
 
-app.post('/api/workouts', ({ body }, res)=>{
-    const workout = new Workout(body);
+app.get('/api/workouts/range', (req,res)=>{
+    db.Workout.find({})
+        .then(data=> res.json(data))
+        .catch(err=> res.json(err));
+})
 
+app.post('/api/workouts', ({ body }, res)=>{
+    const workout = new db.Workout();
+    console.log(workout);
     db.Workout.create(workout)
     .then(data => {
       res.json(data);
@@ -33,7 +49,7 @@ app.post('/api/workouts', ({ body }, res)=>{
 
 app.put('/api/workouts/:id', (req, res)=>{
     const id = mongojs.ObjectId(req.params.id);
-    const exercise = new Workout(req.body);
+    const exercise = req.body;
     db.Workout.update(
         {_id: id}, 
         {$push: {exercises: exercise}

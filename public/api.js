@@ -7,10 +7,13 @@ const API = {
       console.log(err)
     }
     let json = await res.json();
+
     json = json[json.length - 1];
-    let totalDuration = 0;
-    json.exercises.forEach(exercise => totalDuration+= exercise.duration);
-    json.totalDuration = totalDuration;
+    if (json){
+      let totalDuration = 0;
+      json.exercises.forEach(exercise => totalDuration+= exercise.duration);
+      json.totalDuration = totalDuration;
+    }
 
     return json;
   },

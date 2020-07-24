@@ -35,10 +35,8 @@ app.get('/api/workouts/range', (req,res)=>{
         .catch(err=> res.json(err));
 })
 
-app.post('/api/workouts', ({ body }, res)=>{
-    const workout = new db.Workout();
-    console.log(workout);
-    db.Workout.create(workout)
+app.post('/api/workouts', ({ body }, res)=>{  
+    db.Workout.create(body)
     .then(data => {
       res.json(data);
     })

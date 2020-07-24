@@ -6,9 +6,13 @@ const API = {
     } catch (err) {
       console.log(err)
     }
-    const json = await res.json();
+    let json = await res.json();
+    json = json[json.length - 1];
+    let totalDuration = 0;
+    json.exercises.forEach(exercise => totalDuration+= exercise.duration);
+    json.totalDuration = totalDuration;
 
-    return json[json.length - 1];
+    return json;
   },
   async addExercise(data) {
     const id = location.search.split("=")[1];
